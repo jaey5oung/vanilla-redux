@@ -4,24 +4,40 @@ const add = document.getElementById("add")
 const minus = document.getElementById("minus")
 const number = document.querySelector("span")
 
+number.innerText = 0
+
+const ADD = "ADD"
+const MINUS = "MINUS"
+
 const countModifiter = (count = 0, action) => {
   //reducer나 modifier는 처음으로 나의 데이터를 바꿔준다 하지만 리턴하는것은 나의 application에 있는 data이다
-  if (action.type === "ADD") {
-    return count + 1
-  } else if (action.type === "MINUS") {
-    return count - 1
-  } else {
-    return count
+  console.log(count, action)
+  switch (action.type) {
+    case ADD:
+      return count + 1
+    case MINUS:
+      return count - 1
+    default:
+      return count
   }
 }
 
 const countStore = createStore(countModifiter)
 
-countStore.dispatch({ type: "ADD" })
-countStore.dispatch({ type: "ADD" })
-countStore.dispatch({ type: "ADD" })
-countStore.dispatch({ type: "ADD" })
-countStore.dispatch({ type: "ADD" })
-countStore.dispatch({ type: "MINUS" })
+const onChange = () => {
+  number.innerText = countStore.getState()
+}
 
-console.log(countStore.getState())
+countStore.subscribe(onChange)
+
+const handleAdd = () => {
+  countStore.dispatch({ type: ADD })
+}
+const handleMinus = () => {
+  countStore.dispatch({ type: MINUS })
+}
+
+add.addEventListener("click", handleAdd)
+minus.addEventListener("click", handleMinus)
+
+// console.log(countStore.getState())
